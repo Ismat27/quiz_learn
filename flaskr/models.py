@@ -76,6 +76,8 @@ class Referral(db.Model):
     id = Column(Integer, primary_key=True)
     public_id = Column(String(200))
     commission = Column(Numeric(10, 2))
+    status = Column(Boolean, server_default='f')
+    date_created = Column(DateTime, server_default=func.now())
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', backref='referrals', foreign_keys=[user_id])
     refered_user_id = Column(Integer, ForeignKey('users.id'))
@@ -85,7 +87,9 @@ class Referral(db.Model):
     def format(self):
         return {
             'commission': self.commission,
-            'referred_user': self.refered_user.fullname()
+            'referred_user': self.refered_user.fullname(),
+            'status': self.status,
+            'date_created': self.date_created
         }
 
     def insert(self):

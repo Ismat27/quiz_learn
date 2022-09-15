@@ -17,7 +17,8 @@ def create_user():
         password=data['password']
     except KeyError:
         return error_msg(message='missing data', code=400)
-    
+    for key in data.keys():
+        if not data[key]: return error400()
     current_user = User.query\
                 .filter(or_(User.email==email[0], User.username==username[0]))\
                 .first()
@@ -25,7 +26,7 @@ def create_user():
         return error_msg(message='email or username taken', code=409)
     try:
         user = User(
-            public_id = str(uuid.uuid4()),
+            public_id = str(uuid.uuid4()).replace('-', ''),
             username=username[0],
             first_name=first_name[0],
             last_name=last_name[0],
@@ -33,7 +34,10 @@ def create_user():
             password=generate_password_hash(password)
         )
         user.insert()
-        return jsonify(user.format())
+        return jsonify({
+            'success': True,
+            'user': user.format()
+        })
     except Exception as error:
         print(error)
         db.session.close()
@@ -50,7 +54,8 @@ def all_users():
             for user in db_users
         ]
     return jsonify({
-        'data': users
+        'data': users,
+        'success': True
     })
 
 def user(user_id):
@@ -63,11 +68,14 @@ def login_user():
     if not data:
         return error400('login details not provided')
     try:
-        email = data['email']
+        # email = data['email']
+        username = data['username']
         password = data['password']
     except KeyError:
         return error400('missing data')
-    user = User.query.filter_by(email=email).first()
+    for key in data.keys():
+        if not data[key]: return error400()
+    user = User.query.filter_by(username=username).first()
     if not user:
         return error404(message='user not found')
     if check_password_hash(user.password, password):

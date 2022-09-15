@@ -1,7 +1,9 @@
 from flask import request, jsonify, abort
-from .models import User
 import jwt
 from functools import wraps
+
+from .models import User
+from .errors import error400, error401
 
 def get_token(f):
     @wraps(f)
@@ -10,7 +12,7 @@ def get_token(f):
         if 'Authorization' in request.headers:
             token = request.headers['Authorization'].split(' ')[1]
         if not token:
-            abort(401)
+            return error401()
         try:
             data = jwt.decode(token, 'thisisthesecretkey', algorithms=['HS256'])
             current_user = User.query\
@@ -18,6 +20,6 @@ def get_token(f):
                 .first()
         except Exception as error:
             print(error)
-            abort(401)
+            return error400()
         return f(current_user, *args, **kwargs)
     return decorated

@@ -1,13 +1,10 @@
 from flask import jsonify
 from .models import User
+from .errors import error400, error422
 
-def user_dashboard_detail(user_id):
-    user = User.query.get(user_id)
+def user_dashboard_detail(user):
     if not user:
-        return jsonify({
-            'message': 'user not found',
-            'success': False
-        }), 400
+        return error400()
     referrals = []
     try:
         user_referrals = user.referrals
@@ -20,6 +17,6 @@ def user_dashboard_detail(user_id):
             'referrals': referrals
         })
     except Exception as error:
-        return jsonify({
-            'success': False
-        })
+        print(error)
+        return error422()
+    
