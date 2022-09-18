@@ -33,6 +33,8 @@ class User(db.Model):
     is_superuser = Column(Boolean, server_default='f')
     signup_date = Column(DateTime, server_default=func.now())
     last_seen = Column(DateTime, server_default=func.now())
+    cp = Column(Integer, nullable=False, default=0, server_default='0') # challenge points
+    cap = Column(Integer, nullable=False, default=0, server_default='0') # course access points
 
     def __init__(self, **kwargs):
         self.public_id = kwargs['public_id']
@@ -58,6 +60,8 @@ class User(db.Model):
             'last_name': self.last_name,
             'email': self.email,
             'username': self.username,
+            'challenge_points': self.cp,
+            'course_access_points': self.cap
         }
     
     def insert(self):
