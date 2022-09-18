@@ -14,7 +14,9 @@ def user_dashboard_detail(user):
                 referral in user_referrals
             ]
         return jsonify({
-            'referrals': referrals
+            'referrals': referrals,
+            'cap': user.cap,
+            'cp': user.cp,
         })
     except Exception as error:
         print(error)
