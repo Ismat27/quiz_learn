@@ -21,4 +21,3 @@ def create_referral():
     except Exception as error:
         print(error)
         return error422
-

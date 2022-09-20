@@ -126,15 +126,19 @@ class Course(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-class Quiz(db.Model):
+class Question(db.Model):
     """Table for quiz questions
         cp: challenge points
         cap: course access points
     """
-    __tablename__ = 'quiz'
+    __tablename__ = 'quiz_questions'
     id = Column(Integer, primary_key=True)
     public_id = Column(String(200))
-    question = Column(Text, nullable=False)
+    text = Column(Text, nullable=False)
+    option_a = Column(Text, nullable=False)
+    option_b = Column(Text, nullable=False)
+    option_c = Column(Text, nullable=False)
+    option_d = Column(Text, nullable=False)
     answer = Column(Text, nullable=False)
     cp_wrong = Column(Integer, nullable=False)
     cp_right = Column(Integer, nullable=False)
@@ -153,6 +157,22 @@ class Quiz(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
+    def format(self):
+        options = [
+            self.option_a, self.option_b,
+            self.option_c, self.option_d,
+        ]
+        opt = ['a', 'b', 'c']
+        correct_option = ''
+        for (key, value) in zip(options, opt):
+            if value == self.answer:
+                correct_option = key
+        return {
+            'options': options,
+            'question': self.text,
+            'correct_option': correct_option
+        }
 
 # class CoursePurchase(db.Model):
 #     pass

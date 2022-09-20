@@ -4,6 +4,7 @@ from .auth import get_token
 from .referrals import create_referral
 from .dashboard import user_dashboard_detail
 from .users import user, create_user, all_users, login_user
+from .quiz import create_question
 
 from .models import setup_db
 def create_app(test_config=None):
@@ -50,5 +51,9 @@ def create_app(test_config=None):
     @get_token
     def dashboard(current_user):
         return user_dashboard_detail(current_user)
+
+    @app.route('/question/', methods=['POST'])
+    def new_question():
+        return create_question()
     
     return app
