@@ -163,15 +163,16 @@ class Question(db.Model):
             self.option_a, self.option_b,
             self.option_c, self.option_d,
         ]
-        opt = ['a', 'b', 'c']
+        opt = ['a', 'b', 'c', 'd']
         correct_option = ''
-        for (key, value) in zip(options, opt):
+        for (key, value) in zip(opt, options):
             if value == self.answer:
                 correct_option = key
+                break
         return {
             'options': options,
             'question': self.text,
-            'correct_option': correct_option
+            'correct_option': correct_option,
         }
 
 # class CoursePurchase(db.Model):
