@@ -158,6 +158,17 @@ class Question(db.Model):
         db.session.delete(self)
         db.session.commit()
     
+    def quiz_format(self):
+        options = [
+            self.option_a, self.option_b,
+            self.option_c, self.option_d,
+        ]
+        return {
+            'options': options,
+            'question': self.text,
+            'id': self.id,
+        }
+    
     def format(self):
         options = [
             self.option_a, self.option_b,
@@ -173,6 +184,8 @@ class Question(db.Model):
             'options': options,
             'question': self.text,
             'correct_option': correct_option,
+            'id': self.id,
+            'date_created': self.date_created
         }
 
 # class CoursePurchase(db.Model):
@@ -183,3 +196,29 @@ class Question(db.Model):
 
 # class EnrolledCourse(db.Model):
 #     pass
+
+class QuizSession(db.Model):
+    """Table for quiz sessions users have taken
+    """
+    __tablename__ = 'quiz_sessions'
+    id = Column(Integer, primary_key=True)
+    public_id = Column(String(200))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', backref='quiz_taken', foreign_keys=[user_id])
+    questions = Column(Text)
+    score = Column(Integer, server_default='0')
+    completed = Column(Boolean, server_default='f')
+    date_created = Column(DateTime, server_default=func.now())
+    last_updated = Column(DateTime, server_default=func.now())
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+

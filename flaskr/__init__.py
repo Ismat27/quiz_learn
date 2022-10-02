@@ -4,7 +4,7 @@ from .auth import get_token
 from .referrals import create_referral
 from .dashboard import user_dashboard_detail
 from .users import user, create_user, all_users, login_user
-from .quiz import  quiz_question
+from .quiz import  get_quiz_questions, mark_quiz
 from .question import create_question, all_questions, question_data
 from .errors import resource_not_found, bad_request, not_allowed, not_authorized, not_processable,\
     resource_already_exist,access_denied
@@ -62,12 +62,19 @@ def create_app(test_config=None):
     def dashboard(current_user):
         return user_dashboard_detail(current_user)
 
-    @app.route('/quiz-question/', methods=['POST'])
-    def _quiz_question():
-        return quiz_question()
+    @app.route('/quiz-question/')
+    @get_token
+    def _quiz_question(current_user):
+        return get_quiz_questions()
+    
+    @app.route('/mark-quiz/', methods=['POST'])
+    @get_token
+    def _mark_quiz(current_user):
+        return mark_quiz()
 
     @app.route('/questions/', methods=['POST'])
-    def new_question():
+    @get_token
+    def new_question(current_user):
         return create_question()
     
     @app.route('/questions/')
