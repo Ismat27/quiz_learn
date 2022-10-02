@@ -1,10 +1,10 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from .auth import get_token
 from .referrals import create_referral
 from .dashboard import user_dashboard_detail
 from .users import user, create_user, all_users, login_user
-from .quiz import  get_quiz_questions, mark_quiz
+from .quiz import  get_quiz_questions, mark_quiz, quiz_sessions, delete_quiz_session
 from .question import create_question, all_questions, question_data
 from .errors import resource_not_found, bad_request, not_allowed, not_authorized, not_processable,\
     resource_already_exist,access_denied
@@ -65,12 +65,12 @@ def create_app(test_config=None):
     @app.route('/quiz-question/')
     @get_token
     def _quiz_question(current_user):
-        return get_quiz_questions()
+        return get_quiz_questions(current_user)
     
     @app.route('/mark-quiz/', methods=['POST'])
     @get_token
     def _mark_quiz(current_user):
-        return mark_quiz()
+        return mark_quiz(current_user=current_user)
 
     @app.route('/questions/', methods=['POST'])
     @get_token
@@ -84,5 +84,14 @@ def create_app(test_config=None):
     @app.route('/questions/<int:id>/')
     def _question(id):
         return question_data(id)
+
+    @app.route('/quiz-sessions/')
+    def _quiz_sessions():
+        return  quiz_sessions()
+    
+    @app.route('/quiz-sessions/<int:session_id>/', methods=['DELETE'])
+    def quiz_session(session_id):
+        if request.method == 'DELETE':
+            return delete_quiz_session(session_id=session_id)
 
     return app

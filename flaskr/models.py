@@ -211,6 +211,9 @@ class QuizSession(db.Model):
     date_created = Column(DateTime, server_default=func.now())
     last_updated = Column(DateTime, server_default=func.now())
 
+    def __str__(self):
+        return f'QuizSession taken by {self.user}'
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
@@ -221,4 +224,13 @@ class QuizSession(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
+    def format(self):
+        return {
+            'taken_by': self.user.fullname(),
+            'date': self.date_created,
+            'score': self.score,
+            'id': self.id,
+            'completed': self.completed
+        }
 
