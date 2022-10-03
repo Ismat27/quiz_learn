@@ -6,8 +6,6 @@ from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import func
 
 db = SQLAlchemy()
-
-db = SQLAlchemy()
 migrate = Migrate()
 
 def setup_db(app):
