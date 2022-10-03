@@ -28,9 +28,9 @@ def quiz_question():
 
 def get_quiz_questions(current_user):
 
-    # if day in no_quiz_days:
-    #     print('there is no quiz today')
-    #     abort(403, description='no quiz today')
+    if day in no_quiz_days:
+        print('there is no quiz today')
+        abort(403, description='no quiz today')
 
     quiz_session =  QuizSession.query.filter(
         QuizSession.user_id == current_user.id
@@ -64,13 +64,16 @@ def mark_quiz(current_user):
         QuizSession.user_id == current_user.id
     ).order_by(desc(QuizSession.date_created)).first()
 
-    if quiz_session.completed == True:
-        abort(403, description='quiz already graded')
-
     if not quiz_session:
         abort(403, description='you have not taken quiz')
 
+    if quiz_session.completed == True:
+        abort(403, description='quiz already graded')
+
+
     score = 0
+    cp = 0
+    cap = 0
     try:
         data = request.get_json()
         answers = data['answers']
@@ -83,13 +86,24 @@ def mark_quiz(current_user):
             user_answer = answer.get('user_answer', '')
             question_id = answer.get('question_id', '')
             question = Question.query.get(question_id)
-            if question.answer and question.answer == user_answer:
-                score += 1
+            if question:
+                if question.answer == user_answer:
+                    score += 1
+                    cp += question.cp_right
+                    cap += question.cap_right
+                else:
+                    cp += question.cp_wrong
+                    cap += question.cap_wrong
         quiz_session.score = score
         quiz_session.completed = True
         quiz_session.update()
+        current_user.cp += cp
+        current_user.cap += cap
+        current_user.update()
         return jsonify({
-            'score': score
+            'score': score,
+            'challenge_points': cp,
+            'course_access_points': cap
         })
 
     except Exception:
