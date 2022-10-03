@@ -8,10 +8,12 @@ from .quiz import  get_quiz_questions, mark_quiz, quiz_sessions, delete_quiz_ses
 from .question import create_question, all_questions, question_data
 from .errors import resource_not_found, bad_request, not_allowed, not_authorized, not_processable,\
     resource_already_exist,access_denied
+from config import DevelopmentConfig
 
 from .models import setup_db
-def create_app(test_config=None):
+def create_app(test_config=DevelopmentConfig):
     app = Flask(__name__)
+    app.config.from_object(test_config)
     app.register_error_handler(400, bad_request)
     app.register_error_handler(401, not_authorized)
     app.register_error_handler(403, access_denied)

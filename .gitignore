@@ -27,3 +27,5 @@ htmlcov/
 # miscellaneous
 miscellaneous
 py_client
+
+database.db
