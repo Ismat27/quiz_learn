@@ -49,6 +49,8 @@ def get_quiz_questions(current_user):
             question.quiz_format() for
             question in questions
         ]
+        if not questions:
+            abort(403, description='no quiz today')
         quiz_session = QuizSession(
             public_id = str(uuid.uuid4()).replace('-', ''),
             user_id = current_user.id,
