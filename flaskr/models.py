@@ -7,18 +7,13 @@ from sqlalchemy.sql import func
 
 db = SQLAlchemy()
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = 'sqlite:///' + os.path.join(basedir, 'database.db')
 db = SQLAlchemy()
 migrate = Migrate()
 
-def setup_db(app, database_path=db_path):
-    # app.config["SQLALCHEMY_DATABASE_URI"] = database_path
-    # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+def setup_db(app):
     db.app = app
     db.init_app(app)
     migrate.init_app(app, db)
-
 
 class User(db.Model):
     __tablename__ = 'users'
