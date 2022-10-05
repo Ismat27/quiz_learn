@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 74da7cbbdcbe
+Revision ID: 3012ceb36fbc
 Revises: 
-Create Date: 2022-10-03 06:57:10.021444
+Create Date: 2022-10-05 01:28:41.586039
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '74da7cbbdcbe'
+revision = '3012ceb36fbc'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,8 +38,8 @@ def upgrade():
     sa.Column('cp_right', sa.Integer(), nullable=False),
     sa.Column('cap_wrong', sa.Integer(), nullable=False),
     sa.Column('cap_right', sa.Integer(), nullable=False),
-    sa.Column('date_created', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
-    sa.Column('last_updated', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('date_created', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('last_updated', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -52,8 +52,8 @@ def upgrade():
     sa.Column('password', sa.Text(), nullable=True),
     sa.Column('is_admin', sa.Boolean(), server_default='f', nullable=True),
     sa.Column('is_superuser', sa.Boolean(), server_default='f', nullable=True),
-    sa.Column('signup_date', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
-    sa.Column('last_seen', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('signup_date', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('last_seen', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('cp', sa.Integer(), server_default='0', nullable=False),
     sa.Column('cap', sa.Integer(), server_default='0', nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -65,8 +65,8 @@ def upgrade():
     sa.Column('questions', sa.Text(), nullable=True),
     sa.Column('score', sa.Integer(), server_default='0', nullable=True),
     sa.Column('completed', sa.Boolean(), server_default='f', nullable=True),
-    sa.Column('date_created', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
-    sa.Column('last_updated', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('date_created', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('last_updated', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -75,7 +75,7 @@ def upgrade():
     sa.Column('public_id', sa.String(length=200), nullable=True),
     sa.Column('commission', sa.Numeric(precision=10, scale=2), nullable=True),
     sa.Column('status', sa.Boolean(), server_default='f', nullable=True),
-    sa.Column('date_created', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('date_created', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('refered_user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['refered_user_id'], ['users.id'], ),
