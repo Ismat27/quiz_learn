@@ -43,6 +43,8 @@ def get_quiz_questions(current_user):
     
     try:
         questions = Question.query.limit(15).all()
+        if not questions:
+            abort(403, description='no quiz today')
         questions = [
             question.quiz_format() for
             question in questions
