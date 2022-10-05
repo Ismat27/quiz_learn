@@ -227,3 +227,34 @@ class QuizSession(db.Model):
             'completed': self.completed
         }
 
+class Leaderboard(db.Model):
+    __tablename__ = "leaderboard"
+
+    id = Column(Integer, primary_key=True)
+    public_id = Column(String(200), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', backref=backref("leaderboard_profile", uselist=False), foreign_keys=[user_id])
+    date_created = Column(DateTime, server_default=func.now())
+    last_updated = Column(DateTime, server_default=func.now())
+    cap = Column(Integer, nullable=False)
+    cp = Column(Integer, nullable=False)
+    points = Column(Integer, nullable=False)
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+            'name': self.user.fullname(),
+            'course_access_points': self.cap,
+            'chanllenge_points': self.cp,
+            'total_points': self.cp + self.cap,
+        }
