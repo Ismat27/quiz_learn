@@ -2,7 +2,7 @@ import uuid, random, json, pytz
 from datetime import datetime
 from flask import abort, request, jsonify
 from sqlalchemy import desc, and_
-from .models import Question, QuizSession
+from .models import Question, QuizSession, Leaderboard
 from .errors import error400, error404, error422
 
 my_timezone = pytz.timezone('Africa/Lagos')
@@ -53,6 +53,8 @@ def get_quiz_questions(current_user):
             public_id = str(uuid.uuid4()).replace('-', ''),
             user_id = current_user.id,
             questions = json.dumps(questions),
+            date_created = today,
+            last_updated = today,
             completed = False
         )
         quiz_session.insert()
@@ -100,11 +102,32 @@ def mark_quiz(current_user):
                     cp += question.cp_wrong
                     cap += question.cap_wrong
         quiz_session.score = score
+        quiz_session.last_updated = today
         quiz_session.completed = True
         quiz_session.update()
         current_user.cp += cp
         current_user.cap += cap
         current_user.update()
+
+        leaderboard_profile = current_user.leaderboard_profile
+        if not leaderboard_profile:
+            leaderboard_profile = Leaderboard(
+                public_id = str(uuid.uuid4()).replace('-', ''),
+                user_id = current_user.id,
+                cap = cap,
+                cp = cap,
+                points = score,
+                date_created = today,
+                last_updated = today
+            )
+            leaderboard_profile.insert()
+        else:
+            leaderboard_profile.cap += cap
+            leaderboard_profile.cp += cp
+            leaderboard_profile.points += score
+            leaderboard_profile.last_update = today
+            leaderboard_profile.update()
+
         return jsonify({
             'score': score,
             'challenge_points': cp,
