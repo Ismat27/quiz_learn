@@ -255,6 +255,6 @@ class Leaderboard(db.Model):
         return {
             'name': self.user.fullname(),
             'course_access_points': self.cap,
-            'chanllenge_points': self.cp,
+            'challenge_points': self.cp,
             'total_points': self.cp + self.cap,
         }
