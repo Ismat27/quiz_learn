@@ -1,7 +1,7 @@
 import uuid, random, json, pytz
 from datetime import datetime
 from flask import abort, request, jsonify
-from sqlalchemy import desc
+from sqlalchemy import desc, and_
 from .models import Question, QuizSession
 from .errors import error400, error404, error422
 
@@ -38,8 +38,8 @@ def get_quiz_questions(current_user):
 
     if quiz_session:
         session_date = quiz_session.date_created.date()
-        print(session_date == today.date())
-        abort(403, description='you have already taken quiz for the day')
+        if session_date == today.date():
+            abort(403, description='you have already taken quiz for the day')
     
     try:
         questions = Question.query.limit(15).all()
@@ -49,8 +49,6 @@ def get_quiz_questions(current_user):
             question.quiz_format() for
             question in questions
         ]
-        if not questions:
-            abort(403, description='no quiz today')
         quiz_session = QuizSession(
             public_id = str(uuid.uuid4()).replace('-', ''),
             user_id = current_user.id,
@@ -58,15 +56,25 @@ def get_quiz_questions(current_user):
             completed = False
         )
         quiz_session.insert()
-        return jsonify(questions)
+        return jsonify({
+            'questions': questions,
+            'quiz_id': quiz_session.public_id
+        })
     except Exception:
         abort(422)
 
 def mark_quiz(current_user):
 
-    quiz_session =  QuizSession.query.filter(
-        QuizSession.user_id == current_user.id
-    ).order_by(desc(QuizSession.date_created)).first()
+    try:
+        request_data = request.get_json()
+        quiz_id = request_data['quiz_id']
+        answers = request_data['answers']
+    except Exception:
+        abort(400, description='missing data')
+
+    quiz_session = QuizSession.query.filter(
+        and_(QuizSession.public_id == quiz_id, QuizSession.user_id==current_user.id)
+    ).first()
 
     if not quiz_session:
         abort(403, description='you have not taken quiz')
@@ -74,17 +82,10 @@ def mark_quiz(current_user):
     if quiz_session.completed == True:
         abort(403, description='quiz already graded')
 
-
     score = 0
     cp = 0
     cap = 0
-    try:
-        data = request.get_json()
-        answers = data['answers']
-    except IndexError:
-        abort(400, description='answers missing')
-    except Exception: 
-        return abort(400)
+   
     try:
         for answer in answers:
             user_answer = answer.get('user_answer', '')
