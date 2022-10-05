@@ -6,6 +6,7 @@ from .dashboard import user_dashboard_detail
 from .users import user, create_user, all_users, login_user
 from .quiz import  get_quiz_questions, mark_quiz, quiz_sessions, delete_quiz_session
 from .question import create_question, all_questions, question_data
+from .leaderboard import leaderboard_data
 from .errors import resource_not_found, bad_request, not_allowed, not_authorized, not_processable,\
     resource_already_exist,access_denied
 from config import DevelopmentConfig
@@ -95,5 +96,9 @@ def create_app(test_config=DevelopmentConfig):
     def quiz_session(session_id):
         if request.method == 'DELETE':
             return delete_quiz_session(session_id=session_id)
+
+    @app.route('/leaderboard/')
+    def leaderboard():
+        return leaderboard_data()
 
     return app
