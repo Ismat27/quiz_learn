@@ -258,3 +258,52 @@ class Leaderboard(db.Model):
             'challenge_points': self.cp,
             'total_points': self.cp + self.cap,
         }
+
+class Wallet(db.Model):
+
+    __tablename__ = "user_wallets"
+
+    id = Column(Integer, primary_key=True)
+    public_id = Column(String(200), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', backref=backref("wallet", uselist=False), foreign_keys=[user_id])
+    balance = Column(Numeric, nullable=False, default=0, server_default='0')
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+class WalletTransaction(db.Model):
+    __tablename__ = "user_transactions"
+
+    id = Column(Integer, primary_key=True)
+    public_id = Column(String(200), nullable=False)
+    wallet_id = Column(Integer, ForeignKey('user_wallets.id'))
+    wallet = relationship('Wallet', backref='transactions', foreign_keys=[wallet_id])
+    amount = Column(Numeric, nullable=False)
+    transaction_type = Column(String(50), default='subscription', server_default='subscription', nullable=False)
+    status = Column(Boolean, server_default='pending', nullable=False)
+    paystack_reference = Column(Text, nullable=False)
+    timestamp = Column(DateTime, server_default=func.now(), nullable=False)
+
+    def __str__(self):
+        return f'Made by {self.wallet.user.fullname()}'
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
