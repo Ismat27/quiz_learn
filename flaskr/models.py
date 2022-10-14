@@ -257,6 +257,7 @@ class Leaderboard(db.Model):
             'course_access_points': self.cap,
             'challenge_points': self.cp,
             'total_points': self.cp + self.cap,
+            'score': self.points
         }
 
 class Wallet(db.Model):
@@ -290,7 +291,7 @@ class WalletTransaction(db.Model):
     wallet = relationship('Wallet', backref='transactions', foreign_keys=[wallet_id])
     amount = Column(Numeric, nullable=False)
     transaction_type = Column(String(50), default='subscription', server_default='subscription', nullable=False)
-    status = Column(Boolean, server_default='pending', nullable=False)
+    status = Column(String(50), server_default='pending', nullable=False)
     paystack_reference = Column(Text, nullable=False)
     timestamp = Column(DateTime, server_default=func.now(), nullable=False)
 
@@ -307,3 +308,13 @@ class WalletTransaction(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def format(self):
+        return {
+            'user': self.wallet.user.fullname(),
+            'timestamp': self.timestamp,
+            'paystack_reference': self.paystack_reference,
+            'amount': self.amount,
+            'status': self.status,
+            'type': self.transaction_type
+        }

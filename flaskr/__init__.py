@@ -7,6 +7,7 @@ from .users import user, create_user, all_users, login_user
 from .quiz import  get_quiz_questions, mark_quiz, quiz_sessions, delete_quiz_session
 from .question import create_question, all_questions, question_data
 from .leaderboard import leaderboard_data
+from .payments import all_transactions, confirm_payment, initiate_payment
 from .errors import resource_not_found, bad_request, not_allowed, not_authorized, not_processable,\
     resource_already_exist,access_denied
 from config import DevelopmentConfig
@@ -100,5 +101,19 @@ def create_app(test_config=DevelopmentConfig):
     @app.route('/leaderboard/')
     def leaderboard():
         return leaderboard_data()
+
+    @app.route('/confirm-payment/', methods=['POST'])
+    @get_token
+    def _confirm_payment(current_user):
+        return confirm_payment(current_user)
+
+    @app.route('/initiate-payment/', methods=['POST'])
+    @get_token
+    def _initiate_payment(current_user):
+        return initiate_payment(current_user)
+
+    @app.route('/transactions/')
+    def _transactions():
+        return all_transactions()
 
     return app
