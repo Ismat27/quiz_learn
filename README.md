@@ -1,4 +1,12 @@
-# Get a new quiz question
+# Endpoints
+
+Unless otherwise stated all endpoints will have same base url given below:
+
+```sh
+BASE_URL = 'http://127.0.0.1:8000'
+```
+
+## Get a new quiz question
 
 ``` js
 const requestOptions = {
@@ -21,4 +29,41 @@ fetch('http://127.0.0.1:8000/quiz-question/', requestOptions)
         // catch error here
         console.log(error);
     });
+```
+
+## Sign up new user: /signup/
+
+The following fields are required:
+
+- username
+- first_name
+- last_name
+- email
+- password
+
+Sample request
+
+``` js
+axios.post(`${BASE_URL}/signup/`, {
+    username: 'username',
+    first_name: 'first_name',
+    last_name: 'lastt_name',
+    email: 'email',
+    password: 'password',
+})
+.then((response) => {
+    console.log(response.data)
+})
+.catch(error => {
+    // handle error as appropriate
+})
+```
+
+Sample success response
+
+```js
+{
+    success: true,
+    user: {…} // user details
+}
 ```
