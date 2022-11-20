@@ -67,3 +67,37 @@ Sample success response
     user: {…} // user details
 }
 ```
+
+## Login user: /login/
+
+**Method : Post**
+Required fields:
+
+- username
+- password
+
+Sample request
+
+```js
+axios.post(`${BASE_URL}/login/`, {
+    username: 'username',
+    password: 'password'
+})
+.then((response) => {
+    const {data} = response
+    console.log(data)
+})
+.catch(error => {
+    // handle error
+})
+```
+
+Sample success response
+
+```js
+{
+    success: true;
+    token: ''; // to be sent along all requests require quthorization
+    user: {...} // user details
+}
+```
