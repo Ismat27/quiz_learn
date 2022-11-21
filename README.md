@@ -130,3 +130,42 @@ Sample success response:
     questions: [] // list of questions 
 }
 ```
+
+## GRADE QUIZ: /mark-quiz/
+
+Method: **POST**
+
+Required fields:
+
+- quiz_id: This is given along with quiz questions
+- answers: list of user answers to each question. Each answer will be object as given below
+
+```js
+{
+    question_id: 'string' // unique question id,
+    user_answer: 'user answer to the question'
+}
+```
+
+This endpoint requires authorization
+
+Sample Request
+
+```js
+axios.post(`${BASE_URL}/mark-quiz`, {quiz_id: '', answers: [{...},]}, {
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Token ${token}` }
+})
+.then(response => {
+    const {data} = response
+    console.log(data)
+})
+.catch(error => {
+    // handle error
+})
+```
+
+Sample success response
+
+```js
+{challenge_points: 120, course_access_points: 90, score: 6}
+```
