@@ -82,7 +82,7 @@ def login_user():
     if check_password_hash(user.password, password):
         my_timezone = pytz.timezone('Africa/Lagos')
         today = datetime.now(tz=my_timezone)
-        exp = today + timedelta(seconds=30)
+        exp = today + timedelta(days=7)
         token = jwt.encode(
             {
                 'public_id': user.public_id,
