@@ -101,3 +101,32 @@ Sample success response
     user: {...} // user details
 }
 ```
+
+## GET QUIZ QUESTIONS: /quiz-question/
+
+Method: **GET**
+This endpoint requires authorization token
+
+Sample Request
+
+```js
+axios.GET(`${BASE_URL}/quiz-question/`, {
+    headers: {Authorization: `Token ${token}`} // token is obtained upon logging in
+})
+.then(response => {
+    const {data} = response
+    console.log(data)
+})
+.catch(error => {
+    // handle error
+})
+```
+
+Sample success response:
+
+```js
+{
+    quiz_id: '' // string, to be sent along for grading the user after completing the quiz
+    questions: [] // list of questions 
+}
+```
