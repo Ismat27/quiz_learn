@@ -105,6 +105,7 @@ Sample success response
 ## GET QUIZ QUESTIONS: /quiz-question/
 
 Method: **GET**
+
 This endpoint requires authorization token
 
 Sample Request
