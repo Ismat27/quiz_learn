@@ -153,7 +153,7 @@ This endpoint requires authorization
 Sample Request
 
 ```js
-axios.post(`${BASE_URL}/mark-quiz`, {quiz_id: '', answers: [{...},]}, {
+axios.post(`${BASE_URL}/mark-quiz/`, {quiz_id: '', answers: [{...},]}, {
     headers: { 'Content-Type': 'application/json', 'Authorization': `Token ${token}` }
 })
 .then(response => {
@@ -169,4 +169,60 @@ Sample success response
 
 ```js
 {challenge_points: 120, course_access_points: 90, score: 6}
+```
+
+## Dashboard Details: /dashboard/
+
+Method: **GET**
+
+This endpoint requires authorization
+
+Response:
+
+- List of user referrals
+- User Course access points
+- User challenge points
+
+Sample Request
+
+```js
+axios.get(`${BASE_URL}/dashboard/`, {
+    headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+    }
+    })
+    .then(response => {
+    const {data} = response
+    console.log(data)
+    })
+    .catch(error => {
+    console.log(error);
+    })
+```
+
+## Leaderboard Details: /leaderboard/
+
+Method: **GET**
+
+Response:
+
+- List of leaderboard data
+
+Sample Request
+
+```js
+axios.get(`${BASE_URL}/leaderboard/`, {
+    headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+    }
+    })
+    .then(response => {
+    const {data} = response
+    console.log(data)
+    })
+    .catch(error => {
+    console.log(error);
+    })
 ```
