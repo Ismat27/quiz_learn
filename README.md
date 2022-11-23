@@ -6,31 +6,6 @@ Unless otherwise stated all endpoints will have same base url given below:
 BASE_URL = 'http://127.0.0.1:8000'
 ```
 
-## Get a new quiz question
-
-``` js
-const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                'prev_id': [] // the list should contain previous quiz id that the user has answered
-            })
-        };
-fetch('http://127.0.0.1:8000/quiz-question/', requestOptions)
-    .then(response => response.json())
-    .then(data => {
-            console.log(data);
-        else {
-            // do what you like by checking the error
-            console.log('failed');
-        }
-    })
-    .catch(error => {
-        // catch error here
-        console.log(error);
-    });
-```
-
 ## Sign up new user: /signup/
 
 The following fields are required:
@@ -100,6 +75,28 @@ Sample success response
     token: ''; // to be sent along all requests require quthorization
     user: {...} // user details
 }
+```
+
+## GET USER DETAIL: /users/user_id/
+
+Method: **GET**
+
+NB: **user_id** is a unique identifier for the user which is gotten after a user has logged in
+
+```js
+axios.get(`${BASE_URL}/users/${user_id}/`, {
+    headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+    }
+    })
+    .then(response => {
+    const {data} = response
+    console.log(data)
+    })
+    .catch(error => {
+    console.log(error);
+    })
 ```
 
 ## GET QUIZ QUESTIONS: /quiz-question/
