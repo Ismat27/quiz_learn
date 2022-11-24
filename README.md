@@ -223,3 +223,70 @@ axios.get(`${BASE_URL}/leaderboard/`, {
     console.log(error);
     })
 ```
+
+## Set a New Question: /questions/
+
+Method: **POST**
+
+This endpoint requires that the user is authorized to set a new question
+
+Required fields (data):
+
+- text: question text
+- option_a: first question option
+- option_b: second question option
+- option_c: third question option
+- option_d: fourth question option
+- answer: correct answer to the question
+- cp_wrong: a number that indicates the challenge points to be awarded a user that got the question wrong
+- cp_right: a number that indicates the challenge points to be awarded a user that got the question right
+- cap_wrong: a number that indicates the course access points to be awarded a user that got the question wrong
+- cap_right: a number that indicates the course access points to be awarded a user that got the question right
+
+Sample Request
+
+```js
+axios.post(`${BASE_URL}/questions/`, data, {
+    // data is an object containing values for the required fields
+    headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+    }
+    })
+    .then(response => {
+    const {data} = response
+    console.log(data)
+    })
+    .catch(error => {
+    console.log(error);
+    })
+```
+
+## Read, Delete a Question: /questions/question_id/
+
+Method: **GET** to read
+
+Method: **DELLETE** to delete
+
+This endpoint requires that the user is authorized to read or delete a question as per the request method
+
+The **question_id** is a unique identifier for each question
+
+## Update a Question: /questions/question_id/
+
+Method: **PUT**
+
+This endpoint requires that the user is authorized to delete question
+
+Required fields (data):
+
+- text: question text
+- option_a: first question option
+- option_b: second question option
+- option_c: third question option
+- option_d: fourth question option
+- answer: correct answer to the question
+- cp_wrong: a number that indicates the challenge points to be awarded a user that got the question wrong
+- cp_right: a number that indicates the challenge points to be awarded a user that got the question right
+- cap_wrong: a number that indicates the course access points to be awarded a user that got the question wrong
+- cap_right: a number that indicates the course access points to be awarded a user that got the question right
