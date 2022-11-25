@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import jwt
+import pytz
 from datetime import datetime, timedelta
 from flask import jsonify, abort,  request
 from sqlalchemy import or_
@@ -79,10 +80,13 @@ def login_user():
     if not user:
         return error404(message='user not found')
     if check_password_hash(user.password, password):
+        my_timezone = pytz.timezone('Africa/Lagos')
+        today = datetime.now(tz=my_timezone)
+        exp = today + timedelta(days=7)
         token = jwt.encode(
             {
                 'public_id': user.public_id,
-                'exp': datetime.utcnow() + timedelta(days=7),
+                'exp': exp,
             }, 'thisisthesecretkey', algorithm='HS256'
         )
         return jsonify({

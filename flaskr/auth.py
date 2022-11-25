@@ -1,4 +1,4 @@
-from flask import request, jsonify, abort
+from flask import request, abort
 import jwt
 from functools import wraps
 
@@ -18,8 +18,9 @@ def get_token(f):
             current_user = User.query\
                 .filter_by(public_id=data['public_id'])\
                 .first()
-        except Exception as error:
-            print(error)
+        except jwt.ExpiredSignatureError:
+            abort(403, description='session expired, login again')
+        except Exception:
             return error400()
         return f(current_user, *args, **kwargs)
     return decorated
