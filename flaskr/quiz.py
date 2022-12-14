@@ -148,6 +148,20 @@ def quiz_sessions():
     ]
     return jsonify(sessions)
 
+def user_quiz_sessions(current_user):
+    sessions = []
+
+    quizzes = QuizSession.query.filter(
+        QuizSession.user_id==current_user.id
+    ).order_by(desc(QuizSession.date_created)).all()
+
+    if quizzes:
+        sessions = [
+            quiz.format() for quiz in quizzes
+        ]
+    return jsonify(sessions)
+
+
 def delete_quiz_session(session_id):
     session = QuizSession.query.get(session_id)
     if not session:
