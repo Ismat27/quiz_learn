@@ -3,7 +3,7 @@ from flask_cors import CORS
 from .auth import get_token
 from .referrals import create_referral
 from .dashboard import user_dashboard_detail
-from .users import user, create_user, all_users, login_user
+from .users import user, create_user, all_users, login_user, update_user
 from .quiz import  get_quiz_questions, mark_quiz, quiz_sessions, delete_quiz_session
 from .question import create_question, all_questions, question_data
 from .leaderboard import leaderboard_data
@@ -48,6 +48,10 @@ def create_app(test_config=DevelopmentConfig):
     @app.route('/users/<int:user_id>/')
     def read_user(user_id):
         return user(user_id)
+
+    @app.route('/users/<int:user_id>/', methods=['PUT', 'PATCH'])
+    def edit_user(user_id):
+        return update_user(user_id)
     
     @app.route('/signup/', methods=['POST'])
     def signup():

@@ -64,6 +64,45 @@ def user(user_id):
     if not user: return error404()
     return jsonify(user.format())
 
+def update_user(user_id):
+    user = User.query.get(user_id)
+    if not user: abort(404, description='user details not found')
+
+    data = request.get_json()
+    new_username = data.get('username').strip()
+    new_email = data.get('email').strip()
+
+    if not new_email or not new_username:
+        abort(400, description="username or email cannot be empty")
+
+    test_user1 = User.query.filter(
+        User.email==new_email
+    ).first()
+
+    if test_user1:
+        if new_email != user.email:
+            abort(422, description="email already taken")
+        else:
+            user.email = new_email
+    else:
+        user.email = new_email
+
+    test_user2 = User.query.filter(
+        User.username==new_username
+    ).first()
+
+    if test_user2:
+        if new_username != user.username:
+            abort(422, description="username already taken")
+        else:
+            user.username = new_username
+    else:
+        user.username = new_username
+
+    user.update()
+
+    return jsonify(user.format())
+
 def login_user():
     data = request.get_json()
     if not data:
