@@ -19,7 +19,9 @@ def create_user():
     except KeyError:
         return error_msg(message='missing data', code=400)
     for key in data.keys():
-        if not data[key]: return error400()
+        if not data[key] and key not in ['first_name', 'last_name']: 
+            description=f"{key} cannot be empty"
+            return abort(400, description=description)
     current_user = User.query\
                 .filter(or_(User.email==email[0], User.username==username[0]))\
                 .first()
@@ -42,9 +44,7 @@ def create_user():
     except Exception as error:
         print(error)
         db.session.close()
-        return jsonify({
-            'success': False
-        }), 422
+        abort(422, description="unable to process request")
 
 def all_users():
     users = []
