@@ -44,6 +44,8 @@ class User(db.Model):
         return f'{self.first_name} {self.last_name}'
     
     def fullname(self):
+        if not self.first_name and not self.last_name:
+            return self.username
         return f'{self.first_name} {self.last_name}'
     
     def format(self):
