@@ -28,9 +28,9 @@ def quiz_question():
 
 def get_quiz_questions(current_user):
 
-    if day in no_quiz_days:
-        print('there is no quiz today')
-        abort(403, description='no quiz today')
+    # if day in no_quiz_days:
+    #     print('there is no quiz today')
+    #     abort(403, description='no quiz today')
 
     quiz_session =  QuizSession.query.filter(
         QuizSession.user_id == current_user.id
