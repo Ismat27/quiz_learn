@@ -11,7 +11,9 @@ def user_dashboard_detail(user):
     sessions = []
     quizzes = QuizSession.query.filter(
         QuizSession.user_id==user.id
-    ).order_by(desc(QuizSession.date_created)).all()
+    ).order_by(
+        desc(QuizSession.score), desc(QuizSession.date_created)
+    ).all()
     if quizzes:
         sessions = [
             quiz.format() for quiz in quizzes
