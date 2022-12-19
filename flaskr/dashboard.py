@@ -12,7 +12,7 @@ def user_dashboard_detail(user):
     quizzes = QuizSession.query.filter(
         QuizSession.user_id==user.id
     ).order_by(
-        desc(QuizSession.score), desc(QuizSession.date_created)
+        desc(QuizSession.score), desc(QuizSession.last_updated)
     ).all()
     if quizzes:
         sessions = [
