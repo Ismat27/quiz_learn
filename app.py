@@ -1,5 +1,5 @@
 from flaskr import create_app
-from config import DevelopmentConfig, TestingConfig, ProductionConfig
+from config import  ProductionConfig
 
 app = create_app(ProductionConfig)
 
