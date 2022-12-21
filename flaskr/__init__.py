@@ -49,7 +49,7 @@ def create_app(test_config=DevelopmentConfig):
     def read_user(user_id):
         return user(user_id)
 
-    @app.route('/users/<int:user_id>/', methods=['PUT', 'PATCH'])
+    @app.route('/users/<user_id>/', methods=['PUT', 'PATCH'])
     def edit_user(user_id):
         return update_user(user_id)
     
