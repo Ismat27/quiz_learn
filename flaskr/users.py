@@ -65,7 +65,9 @@ def user(user_id):
     return jsonify(user.format())
 
 def update_user(user_id):
-    user = User.query.get(user_id)
+    user = User.query.filter(
+        User.public_id==user_id
+    ).first()
     if not user: abort(404, description='user details not found')
 
     data = request.get_json()
