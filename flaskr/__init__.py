@@ -50,8 +50,9 @@ def create_app(test_config=DevelopmentConfig):
         return user(user_id)
 
     @app.route('/users/<user_id>/', methods=['PUT', 'PATCH'])
-    def edit_user(user_id):
-        return update_user(user_id)
+    @get_token
+    def edit_user(current_user, user_id):
+        return update_user(current_user.public_id)
     
     @app.route('/signup/', methods=['POST'])
     def signup():
