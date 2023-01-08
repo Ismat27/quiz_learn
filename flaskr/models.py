@@ -320,3 +320,19 @@ class WalletTransaction(db.Model):
             'status': self.status,
             'type': self.transaction_type
         }
+
+class Spin(db.Model):
+
+    __tablename__ = 'spins'
+    id = Column(Integer, primary_key=True)
+    public_id = Column(String(200))
+    date_created = Column(DateTime, server_default=func.now())
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', backref='spins', foreign_keys=[user_id])
+    point = Column(Integer, nullable=False)
+
+    def format(self):
+        return {
+            'point': self.point,
+            'user': self.user.fullname()
+        }
