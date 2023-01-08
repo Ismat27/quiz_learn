@@ -10,6 +10,7 @@ from .leaderboard import leaderboard_data
 from .payments import all_transactions, confirm_payment, initiate_payment
 from .errors import resource_not_found, bad_request, not_allowed, not_authorized, not_processable,\
     resource_already_exist,access_denied
+from .spin import all_spins, new_spin
 from config import DevelopmentConfig
 
 from .models import setup_db
@@ -120,5 +121,17 @@ def create_app(test_config=DevelopmentConfig):
     @app.route('/transactions/')
     def _transactions():
         return all_transactions()
+    
+    @app.route('/spins/')
+    def _spins():
+        return all_spins()
+
+    @app.route('/spins/', methods=['POST'])
+    def _new_spin():
+        return new_spin()
+
+    @app.route('/spins/<id>/', methods=['DELETE', 'GET', 'PUT', 'PATCH'])
+    def _spin(id):
+        return 'ABC'
 
     return app
