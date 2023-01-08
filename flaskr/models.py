@@ -331,8 +331,20 @@ class Spin(db.Model):
     user = relationship('User', backref='spins', foreign_keys=[user_id])
     point = Column(Integer, nullable=False)
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        
     def format(self):
         return {
             'point': self.point,
             'user': self.user.fullname()
         }
+    
