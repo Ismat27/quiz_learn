@@ -290,3 +290,37 @@ Required fields (data):
 - cp_right: a number that indicates the challenge points to be awarded a user that got the question right
 - cap_wrong: a number that indicates the course access points to be awarded a user that got the question wrong
 - cap_right: a number that indicates the course access points to be awarded a user that got the question right
+
+## Submit spin result: /spins/
+
+Method: **POST**
+
+This endpoint is to be called after spinning to record the points or items won by user as the case may be.
+
+Required fields (data):
+
+- username: the username of the user as recorded in the database
+- point: points obtained by user after spinning. This to be integer
+
+Sample Request
+
+```js
+const data = {
+    username: 'username', // corresponding username to be included
+    point: 5 // asssuming the user obtained 5 points after spinning
+}
+axios.post(`${BASE_URL}/spins/`, data, {
+    // data is an object containing values for the required fields
+    headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+    }
+    })
+    .then(response => {
+    const {data} = response
+    console.log(data)
+    })
+    .catch(error => {
+    console.log(error);
+    })
+```
