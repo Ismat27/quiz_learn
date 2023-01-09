@@ -96,7 +96,7 @@ axios.get(`${BASE_URL}/users/${user_id}/`, {
     })
     .catch(error => {
     console.log(error);
-    })
+})
 ```
 
 ## GET QUIZ QUESTIONS: /quiz-question/
@@ -195,7 +195,7 @@ axios.get(`${BASE_URL}/dashboard/`, {
     })
     .catch(error => {
     console.log(error);
-    })
+})
 ```
 
 ## Leaderboard Details: /leaderboard/
@@ -221,7 +221,7 @@ axios.get(`${BASE_URL}/leaderboard/`, {
     })
     .catch(error => {
     console.log(error);
-    })
+})
 ```
 
 ## Set a New Question: /questions/
@@ -259,7 +259,7 @@ axios.post(`${BASE_URL}/questions/`, data, {
     })
     .catch(error => {
     console.log(error);
-    })
+})
 ```
 
 ## Read, Delete a Question: /questions/question_id/
@@ -299,8 +299,8 @@ This endpoint is to be called after spinning to record the points or items won b
 
 Required fields (data):
 
-- username: the username of the user as recorded in the database
-- point: points obtained by user after spinning. This to be integer
+- username: The username of the user as recorded in the database.
+- point: Points obtained by user after spinning. This to be an integer.
 
 Sample Request
 
@@ -322,5 +322,5 @@ axios.post(`${BASE_URL}/spins/`, data, {
     })
     .catch(error => {
     console.log(error);
-    })
+})
 ```
