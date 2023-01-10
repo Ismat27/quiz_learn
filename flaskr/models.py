@@ -44,6 +44,8 @@ class User(db.Model):
         return f'{self.first_name} {self.last_name}'
     
     def fullname(self):
+        if not self.first_name and not self.last_name:
+            return self.username
         return f'{self.first_name} {self.last_name}'
     
     def format(self):
@@ -318,3 +320,31 @@ class WalletTransaction(db.Model):
             'status': self.status,
             'type': self.transaction_type
         }
+
+class Spin(db.Model):
+
+    __tablename__ = 'spins'
+    id = Column(Integer, primary_key=True)
+    public_id = Column(String(200))
+    date_created = Column(DateTime, server_default=func.now())
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', backref='spins', foreign_keys=[user_id])
+    point = Column(Integer, nullable=False)
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        
+    def format(self):
+        return {
+            'point': self.point,
+            'user': self.user.fullname()
+        }
+    

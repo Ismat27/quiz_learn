@@ -3,13 +3,14 @@ from flask_cors import CORS
 from .auth import get_token
 from .referrals import create_referral
 from .dashboard import user_dashboard_detail
-from .users import user, create_user, all_users, login_user
+from .users import user, create_user, all_users, login_user, update_user
 from .quiz import  get_quiz_questions, mark_quiz, quiz_sessions, delete_quiz_session
 from .question import create_question, all_questions, question_data
 from .leaderboard import leaderboard_data
 from .payments import all_transactions, confirm_payment, initiate_payment
 from .errors import resource_not_found, bad_request, not_allowed, not_authorized, not_processable,\
     resource_already_exist,access_denied
+from .spin import all_spins, new_spin
 from config import DevelopmentConfig
 
 from .models import setup_db
@@ -48,6 +49,11 @@ def create_app(test_config=DevelopmentConfig):
     @app.route('/users/<int:user_id>/')
     def read_user(user_id):
         return user(user_id)
+
+    @app.route('/users/<user_id>/', methods=['PUT', 'PATCH'])
+    @get_token
+    def edit_user(current_user, user_id):
+        return update_user(current_user.public_id)
     
     @app.route('/signup/', methods=['POST'])
     def signup():
@@ -115,5 +121,17 @@ def create_app(test_config=DevelopmentConfig):
     @app.route('/transactions/')
     def _transactions():
         return all_transactions()
+    
+    @app.route('/spins/')
+    def _spins():
+        return all_spins()
+
+    @app.route('/spins/', methods=['POST'])
+    def _new_spin():
+        return new_spin()
+
+    @app.route('/spins/<id>/', methods=['DELETE', 'GET', 'PUT', 'PATCH'])
+    def _spin(id):
+        return 'ABC'
 
     return app
