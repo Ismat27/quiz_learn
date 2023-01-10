@@ -28,9 +28,9 @@ def quiz_question():
 
 def get_quiz_questions(current_user):
 
-    if day in no_quiz_days:
-        print('there is no quiz today')
-        abort(403, description='no quiz today')
+    # if day in no_quiz_days:
+    #     print('there is no quiz today')
+    #     abort(403, description='no quiz today')
 
     quiz_session =  QuizSession.query.filter(
         QuizSession.user_id == current_user.id
@@ -147,6 +147,20 @@ def quiz_sessions():
         session in sessions
     ]
     return jsonify(sessions)
+
+def user_quiz_sessions(current_user):
+    sessions = []
+
+    quizzes = QuizSession.query.filter(
+        QuizSession.user_id==current_user.id
+    ).order_by(desc(QuizSession.date_created)).all()
+
+    if quizzes:
+        sessions = [
+            quiz.format() for quiz in quizzes
+        ]
+    return jsonify(sessions)
+
 
 def delete_quiz_session(session_id):
     session = QuizSession.query.get(session_id)
