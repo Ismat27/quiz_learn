@@ -1,6 +1,6 @@
 from flask import jsonify
 from sqlalchemy import desc
-from .models import QuizSession
+from .models import QuizSession, Leaderboard
 from .errors import error400, error422
 
 def user_dashboard_detail(user):
@@ -18,6 +18,19 @@ def user_dashboard_detail(user):
         sessions = [
             quiz.format() for quiz in quizzes
         ]
+    leaderboard = []
+    board_data = Leaderboard.query.order_by(
+        desc(Leaderboard.last_updated),
+        desc(Leaderboard.points),
+    ).all()
+    if board_data:
+        leaderboard = [
+            data.format() for
+            data in board_data
+        ]
+        leaderboard = sorted(
+            leaderboard, key=lambda x: x["total_points"], reverse=True
+        )
     try:
         user_referrals = user.referrals
         if user_referrals:
@@ -30,6 +43,7 @@ def user_dashboard_detail(user):
             'total_referrals': len(referrals),
             'total_points': user.cap + user.cp,
             'quiz_sessions': sessions,
+            'leaderboard': leaderboard,
             'cap': user.cap,
             'cp': user.cp,
         })
